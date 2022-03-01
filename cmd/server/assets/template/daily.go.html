@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="/static/styles.css"/>
+        <link rel="stylesheet" href="/static/player.css"/>
+
+        <title>Daily Puzzle - Perspective</title>
+    </head>
+
+    <body>
+        <canvas id="gocanvas" style="touch-action:none">
+            <p>Your browser doesn't appear to support the Canvas tag.</p>
+        </canvas>
+        <noscript>
+            <p>Your browser doesn't appear to support Javascript.</p>
+        </noscript>
+        <script src="static/wasm_exec.js"></script>
+        <script src="static/player.js"></script>
+        <script>
+            play("daily.json");
+        </script>
+    </body>
+</html>

@@ -1,0 +1,15 @@
+uniform mat4 u_Model;
+uniform mat4 u_Camera;
+uniform mat4 u_Projection;
+attribute vec3 a_Position;
+attribute vec3 a_Normal;
+varying vec3 v_Position;
+varying vec3 v_Normal;
+
+void main() {
+    mat4 cm = u_Camera * u_Model;
+    v_Position = vec3(cm * vec4(a_Position, 1.0));
+    vec3 norm = vec3(cm * vec4(a_Normal, 0.0));
+    v_Normal = norm / length(norm);
+    gl_Position = u_Projection * cm * vec4(a_Position, 1.0);
+}

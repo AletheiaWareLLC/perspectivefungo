@@ -1,0 +1,13 @@
+Sitemap: https://perspective.fun/sitemap.txt
+
+# Health
+User-agent: *
+Disallow: /health
+
+# Content
+User-agent: *
+Disallow: /daily
+
+# Everything Else OK
+User-agent: *
+Allow: /

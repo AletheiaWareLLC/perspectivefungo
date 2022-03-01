@@ -1,0 +1,97 @@
+a {
+    color: #202020;
+}
+a.light {
+    color: #E0E0E0;
+}
+a:hover {
+    color: black;
+}
+a.light:hover {
+    color: white;
+}
+a img {
+    display: block;
+    margin: 0 auto;
+}
+body {
+    background-color: white;
+    font-family: "Verdana", sans-serif;
+    margin: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #202020;
+}
+h1.light,
+h2.light,
+h3.light,
+h4.light,
+h5.light,
+h6.light {
+    color: #E0E0E0;
+}
+p {
+    color: #101010;
+}
+p.light {
+    color: #F0F0F0;
+}
+.daily {
+    background-image: url('/static/daily.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0 auto;
+    width: 200px;
+    height: 200px;
+}
+.header {
+    background-color: #CCCCCC;
+    padding: 5%;
+}
+.header h1 {
+    padding: 5% 0;
+    text-align: center;
+}
+.header p {
+    text-align: center;
+}
+.footer {
+    background-color: #CCCCCC;
+    padding: 5%;
+}
+.footer img {
+    display: block;
+    margin: 0 auto;
+}
+.footer p {
+    text-align: center;
+}
+.meta {
+    font-size: x-small;
+    letter-spacing: 0.05em;
+    margin: 3px 0px 3px 0px;
+}
+.page {
+    padding: 10%;
+}
+.tile {
+    flex: auto;
+    width: 50%;
+}
+.tiles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+@media screen and (max-width: 600px) {
+    .tile {
+        width: 100%;
+    }
+}
