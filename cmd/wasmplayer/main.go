@@ -31,8 +31,8 @@ func main() {
 		renderFrame(args[0].Float())
 		return nil
 	}))
-	js.Global().Set("startPuzzle", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		if err := startPuzzle(args[0]); err != nil {
+	js.Global().Set("loadPuzzle", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if err := loadPuzzle(args[0]); err != nil {
 			js.Global().Call("alert", err.Error())
 		}
 		return nil
@@ -92,7 +92,7 @@ func loop() {
 	js.Global().Call("requestAnimationFrame", js.Global().Get("renderFrame"))
 }
 
-func startPuzzle(data js.Value) error {
+func loadPuzzle(data js.Value) error {
 	puzzle := &perspectivefungo.Puzzle{}
 
 	puzzle.Size = uint(data.Get("size").Int())

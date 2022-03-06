@@ -12,3 +12,7 @@ body,pre {
     bottom: 0;
     left: 0;
 }
+
+#loading {
+    text-align: center;
+}
