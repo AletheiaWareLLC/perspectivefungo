@@ -194,7 +194,7 @@ func (a *releaseBallAnimation) Progress(time float64) bool {
 	var (
 		steps = 1 + uint(distance)
 		step  uint
-		limit = a.size * 2 // Double size so player is offscreen, well out of bounds
+		limit = a.size * 10 // 10x size so player is offscreen, well out of bounds
 		pos   [3]float32
 		cell  [3]int
 		next  [3]float32
