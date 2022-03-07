@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	BackgroundColor = mgl32.Vec4{0, 0, 0, 1} //{1, 1, 1, 1}
+	BackgroundColor = mgl32.Vec4{1, 1, 1, 1}
 	GameLostColor   = mgl32.Vec4{0.9, 0, 0, 1}
 	GameWonColor    = mgl32.Vec4{0.9, 0.9, 0, 1}
 	RetryColor      = mgl32.Vec4{0.9, 0, 0, 1}
