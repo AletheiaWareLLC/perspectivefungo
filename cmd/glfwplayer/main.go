@@ -82,13 +82,11 @@ func main() {
 	game := perspectivefungo.NewGame(&puzzle)
 
 	/*
-		width = 200
-		height = 200
 		game := &Recorder{
-			Output:args[0],
+			Output: args[0],
 			Mesh:   "goal",
 			Color:  perspectivefungo.GoalColor,
-			Count:  64 - 1,
+			Count:  1, //64 - 1,
 		}
 	*/
 

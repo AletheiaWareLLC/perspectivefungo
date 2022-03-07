@@ -9,6 +9,7 @@ import (
 	"image"
 	"image/color"
 	"image/gif"
+	"image/png"
 	"os"
 )
 
@@ -69,66 +70,89 @@ func (r *Recorder) Loop(d perspectivefungo.Driver) error {
 	}
 
 	if r.frame >= r.Count {
-		// Create Gif Palette
-		downsize := make(map[string]color.Color)
-		colors := make(map[string]color.Color)
-		for _, f := range r.frames {
-			for i := 0; i < length; i += 4 {
-				r := f[i]
-				g := f[i+1]
-				b := f[i+2]
-				a := f[i+3]
-				original := color.RGBA{R: r, G: g, B: b, A: a}
-				if r == 255 && g == 255 && b == 255 && a == 255 {
-					downsize[fmt.Sprintf("%d,%d,%d,%d", original.R, original.G, original.B, original.A)] = original
-					colors[fmt.Sprintf("%d,%d,%d,%d", original.R, original.G, original.B, original.A)] = original
-				} else {
-					limited := color.RGBA{
-						R: (r >> 3) << 3,
-						G: (g >> 3) << 3,
-						B: (b >> 3) << 3,
-						A: (a >> 3) << 3,
-					}
-					downsize[fmt.Sprintf("%d,%d,%d,%d", original.R, original.G, original.B, original.A)] = limited
-					colors[fmt.Sprintf("%d,%d,%d,%d", limited.R, limited.G, limited.B, limited.A)] = limited
-				}
-			}
-		}
-		fmt.Println("Colors:", len(colors))
-
-		var palette []color.Color
-		for _, c := range colors {
-			palette = append(palette, c)
-		}
-
-		// Create Gif Frames
-		var images []*image.Paletted
-		var delays []int
-		for _, f := range r.frames {
-			img := image.NewPaletted(image.Rect(0, 0, r.width, r.height), palette)
-			images = append(images, img)
-			delays = append(delays, 1)
+		switch r.Count {
+		case 1:
+			frame := r.frames[0]
+			img := image.NewRGBA(image.Rect(0, 0, r.width, r.height))
 			for x := 0; x < r.width; x++ {
 				for y := 0; y < r.height; y++ {
 					i := ((r.height-y-1)*r.width + x) * 4
-					img.Set(x, y, downsize[fmt.Sprintf("%d,%d,%d,%d", f[i], f[i+1], f[i+2], f[i+3])])
+					img.Set(x, y, color.RGBA{frame[i], frame[i+1], frame[i+2], frame[i+3]})
 				}
 			}
-		}
+			// Write Output
+			f, err := os.OpenFile(r.Output, os.O_WRONLY|os.O_CREATE, 0600)
+			if err != nil {
+				return err
+			}
+			if err := png.Encode(f, img); err != nil {
+				return err
+			}
+			if err := f.Close(); err != nil {
+				return err
+			}
+		default:
+			// Create Gif Palette
+			downsize := make(map[string]color.Color)
+			colors := make(map[string]color.Color)
+			for _, f := range r.frames {
+				for i := 0; i < length; i += 4 {
+					r := f[i]
+					g := f[i+1]
+					b := f[i+2]
+					a := f[i+3]
+					original := color.RGBA{R: r, G: g, B: b, A: a}
+					if r == 255 && g == 255 && b == 255 && a == 255 {
+						downsize[fmt.Sprintf("%d,%d,%d,%d", original.R, original.G, original.B, original.A)] = original
+						colors[fmt.Sprintf("%d,%d,%d,%d", original.R, original.G, original.B, original.A)] = original
+					} else {
+						limited := color.RGBA{
+							R: (r >> 3) << 3,
+							G: (g >> 3) << 3,
+							B: (b >> 3) << 3,
+							A: (a >> 3) << 3,
+						}
+						downsize[fmt.Sprintf("%d,%d,%d,%d", original.R, original.G, original.B, original.A)] = limited
+						colors[fmt.Sprintf("%d,%d,%d,%d", limited.R, limited.G, limited.B, limited.A)] = limited
+					}
+				}
+			}
+			fmt.Println("Colors:", len(colors))
 
-		// Write Output
-		f, err := os.OpenFile(r.Output, os.O_WRONLY|os.O_CREATE, 0600)
-		if err != nil {
-			return err
-		}
-		if err := gif.EncodeAll(f, &gif.GIF{
-			Image: images,
-			Delay: delays,
-		}); err != nil {
-			return err
-		}
-		if err := f.Close(); err != nil {
-			return err
+			var palette []color.Color
+			for _, c := range colors {
+				palette = append(palette, c)
+			}
+
+			// Create Gif Frames
+			var images []*image.Paletted
+			var delays []int
+			for _, f := range r.frames {
+				img := image.NewPaletted(image.Rect(0, 0, r.width, r.height), palette)
+				images = append(images, img)
+				delays = append(delays, 1)
+				for x := 0; x < r.width; x++ {
+					for y := 0; y < r.height; y++ {
+						i := ((r.height-y-1)*r.width + x) * 4
+						img.Set(x, y, downsize[fmt.Sprintf("%d,%d,%d,%d", f[i], f[i+1], f[i+2], f[i+3])])
+					}
+				}
+			}
+
+			// Write Output
+			f, err := os.OpenFile(r.Output, os.O_WRONLY|os.O_CREATE, 0600)
+			if err != nil {
+				return err
+			}
+			if err := gif.EncodeAll(f, &gif.GIF{
+				Image: images,
+				Delay: delays,
+			}); err != nil {
+				return err
+			}
+			if err := f.Close(); err != nil {
+				return err
+			}
 		}
 		return errors.New("Done")
 	}
