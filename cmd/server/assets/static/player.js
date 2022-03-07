@@ -15,7 +15,6 @@ function play(puzzle) {
                 .then(result => result.json())
                 .then((data) => {
                     loadPuzzle(data);
-                    document.getElementById("loading").style.display = "none";
                 })
                 .catch((error) => {
                     console.warn(error);

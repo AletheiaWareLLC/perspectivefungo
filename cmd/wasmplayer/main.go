@@ -27,6 +27,9 @@ var (
 )
 
 func main() {
+	window = js.Global().Get("window")
+	document := js.Global().Get("document")
+
 	js.Global().Set("renderFrame", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		renderFrame(args[0].Float())
 		return nil
@@ -35,10 +38,10 @@ func main() {
 		if err := loadPuzzle(args[0]); err != nil {
 			js.Global().Call("alert", err.Error())
 		}
+		document.Call("getElementById", "loading").Get("style").Set("display", "none");
 		return nil
 	}))
-	window = js.Global().Get("window")
-	document := js.Global().Get("document")
+
 	canvas := document.Call("getElementById", "gocanvas")
 
 	canvas.Call("addEventListener", "pointerdown", js.FuncOf(handleDown))
@@ -128,7 +131,7 @@ func loadPuzzle(data js.Value) error {
 	g = perspectivefungo.NewGame(puzzle)
 
 	if err := d.Init(g); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	g.Resize(float32(width), float32(height))
