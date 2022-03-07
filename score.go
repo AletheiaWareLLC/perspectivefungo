@@ -58,7 +58,7 @@ func Score(puzzle *Puzzle) (uint, uint) {
 		if !visited[Key(puzzle.Portals[i], puzzle.Portals[i+1], puzzle.Portals[i+2])] {
 			// log.Println("Unvisited Portal: " + p.String())
 			penalty++
-			penalty++// Double penalty to encourage all portals to be visited
+			penalty++ // Double penalty to encourage all portals to be visited
 		}
 	}
 	if rotations < 0 {

@@ -3,6 +3,7 @@ package main
 import (
 	"aletheiaware.com/perspectivefungo"
 	"encoding/json"
+	"flag"
 	"io"
 	"log"
 	"math"
@@ -14,11 +15,12 @@ import (
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
-const DAILY_URL = "http://localhost/daily.json"
+const DAILY_URL = "https://perspective.fun/daily.json"
 
 var (
 	width  = 800
 	height = 600
+	daily  = flag.Bool("daily", false, "Daily Puzzle")
 )
 
 func init() {
@@ -27,16 +29,8 @@ func init() {
 }
 
 func main() {
-	/*
-		width = 200
-		height = 200
-		game := &Recorder{
-			Output: os.Args[1],
-			Mesh:   "goal",
-			Color:  perspectivefungo.GoalColor,
-			Count:  64 - 1,
-		}
-	*/
+	flag.Parse()
+	args := flag.Args()
 
 	if err := glfw.Init(); err != nil {
 		log.Fatal("failed to initialize glfw:", err)
@@ -59,11 +53,44 @@ func main() {
 
 	d := NewDriver()
 
-	puzzle, err := loadPuzzle()
-	if err != nil {
-		log.Fatal(err)
+	var reader io.Reader
+	if *daily {
+		response, err := http.Get(DAILY_URL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer response.Body.Close()
+		reader = response.Body
+	} else if len(args) > 0 {
+		file, err := os.Open(args[0])
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+		reader = file
 	}
-	game := perspectivefungo.NewGame(puzzle)
+	var puzzle perspectivefungo.Puzzle
+	if reader != nil {
+		if err := json.NewDecoder(reader).Decode(&puzzle); err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		puzzle.Size = 5
+		puzzle.Player = []int{0, 1, 0}
+		puzzle.Goal = []int{0, -1, 0}
+	}
+	game := perspectivefungo.NewGame(&puzzle)
+
+	/*
+		width = 200
+		height = 200
+		game := &Recorder{
+			Output:args[0],
+			Mesh:   "goal",
+			Color:  perspectivefungo.GoalColor,
+			Count:  64 - 1,
+		}
+	*/
 
 	if err := d.Init(game); err != nil {
 		log.Fatal(err)
@@ -165,28 +192,4 @@ func main() {
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
-}
-
-func loadPuzzle() (*perspectivefungo.Puzzle, error) {
-	var reader io.Reader
-	if len(os.Args) > 1 {
-		file, err := os.Open(os.Args[1])
-		if err != nil {
-			return nil, err
-		}
-		defer file.Close()
-		reader = file
-	} else {
-		response, err := http.Get(DAILY_URL)
-		if err != nil {
-			return nil, err
-		}
-		defer response.Body.Close()
-		reader = response.Body
-	}
-	var puzzle perspectivefungo.Puzzle
-	if err := json.NewDecoder(reader).Decode(&puzzle); err != nil {
-		return nil, err
-	}
-	return &puzzle, nil
 }

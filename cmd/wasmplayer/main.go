@@ -38,7 +38,7 @@ func main() {
 		if err := loadPuzzle(args[0]); err != nil {
 			js.Global().Call("alert", err.Error())
 		}
-		document.Call("getElementById", "loading").Get("style").Set("display", "none");
+		document.Call("getElementById", "loading").Get("style").Set("display", "none")
 		return nil
 	}))
 
