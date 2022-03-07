@@ -66,7 +66,6 @@ func (g *game) Init(d Driver) error {
 }
 
 func (g *game) Resize(width, height float32) {
-	// g.projection = mgl32.Perspective(mgl32.DegToRad(45.0), width/height, 0.1, 10.0)
 	g.projection = NewProjection(width, height)
 }
 
@@ -328,6 +327,8 @@ func (g *game) showGame(d Driver) error {
 }
 
 func NewProjection(width, height float32) mgl32.Mat4 {
+	// return mgl32.Perspective(mgl32.DegToRad(45.0), width/height, 0.1, 10.0)
+
 	var (
 		left   float32
 		right  float32

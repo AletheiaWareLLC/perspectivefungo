@@ -224,9 +224,10 @@ func handleUp(this js.Value, args []js.Value) interface{} {
 				g.Reset()
 				g.Start()
 			} else {
+				// TODO write solution to storage
 				params := url.Values{}
 				params.Add("url", "https://perspective.fun/daily")
-				params.Add("text", fmt.Sprintf("%s %.2fs\n\n", s.Start.UTC().Format("2006-01-02"), s.End.Sub(s.Start).Seconds()))
+				params.Add("text", fmt.Sprintf("%.2fs\n\n%s\n\n", s.End.Sub(s.Start).Seconds(), s.Start.UTC().Format("2006-01-02")))
 				params.Add("hashtags", "PerspectiveDailyPuzzle")
 				window.Get("location").Set("href", "https://twitter.com/intent/tweet?"+params.Encode())
 			}
