@@ -10,7 +10,20 @@
     </head>
 
     <body>
-        <p id="loading">Loading...</p>
+        <h1 id="loading">Loading...</h1>
+        <div id="instructions" onclick="dismiss()">
+            <h1>Instructions</h1>
+
+            <p>Navigate the <strong>Yellow Ball</strong> through the 3D maze to reach the <strong>Green Goal</strong>.</p>
+
+            <p><em>Tap</em> to activate gravity, and fall towards the bottom of the screen.</p>
+
+            <p><em>Swipe</em> to rotate maze, and change the direction that you will fall.</p>
+
+            <p>Use <strong>Grey Blocks</strong> to break your fall and <strong>Blue Portals</strong> to teleport around the maze.</p>
+
+            <p>(Tap to Dismiss)</p>
+        </div>
         <canvas id="gocanvas" style="touch-action:none">
             <p>Your browser doesn't appear to support the Canvas tag.</p>
         </canvas>

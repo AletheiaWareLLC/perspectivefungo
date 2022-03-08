@@ -24,3 +24,7 @@ function play(puzzle) {
             console.warn(error);
         });
 }
+
+function dismiss() {
+    document.getElementById("instructions").style.display = "none";
+}
